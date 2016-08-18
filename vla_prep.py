@@ -354,6 +354,7 @@ def getbeam(imagefile=None, beamfile=None):
 
 def imreg(imagefile=None, fitsfile=None, beamfile=None, helio=None, \
           offsetfile=None, toTb=None, scl100=None): 
+    ''' 2016-08-18: BC added history=False in tofits to get rid of excessive history records'''
     if not imagefile:
         raise ValueError, 'Please specify input image'
     if not helio:
@@ -383,7 +384,7 @@ def imreg(imagefile=None, fitsfile=None, beamfile=None, helio=None, \
             p0=hel['p0']
             ia.open(img)
             imr=ia.rotate(pa=str(-p0)+'deg')
-            imr.tofits(fits)
+            imr.tofits(fits,history=False)
             imr.close()
             sum=ia.summary()
             ia.close()
