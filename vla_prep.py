@@ -225,9 +225,14 @@ def ephem_to_helio(msinfo=None, ephem=None, reftime=None, polyfit=None):
         ind=bisect.bisect_left(btimes,tref_d)
         if ind > 1:
             dt=tref_d-btimes[ind-1]
-            scanlen=btimes[ind]-btimes[ind-1]
-            (ra_b,ra_e)=(ras[ind-1]['value'],ras[ind]['value'])
-            (dec_b,dec_e)=(decs[ind-1]['value'],decs[ind]['value'])
+            if ind < len(btimes):
+                scanlen=btimes[ind]-btimes[ind-1]
+                (ra_b,ra_e)=(ras[ind-1]['value'],ras[ind]['value'])
+                (dec_b,dec_e)=(decs[ind-1]['value'],decs[ind]['value'])
+            if ind >= len(btimes):
+                scanlen=btimes[ind-1]-btimes[ind-2]
+                (ra_b,ra_e)=(ras[ind-2]['value'],ras[ind-1]['value'])
+                (dec_b,dec_e)=(decs[ind-2]['value'],decs[ind-1]['value'])
         if ind == 1: # only one scan exists (e.g., imported from AIPS)
             ra_b=ras[ind-1]['value']
             ra_e=ra_b
@@ -354,7 +359,6 @@ def getbeam(imagefile=None, beamfile=None):
 
 def imreg(imagefile=None, fitsfile=None, beamfile=None, helio=None, \
           offsetfile=None, toTb=None, scl100=None): 
-    ''' 2016-08-18: BC added history=False in tofits to get rid of excessive history records'''
     if not imagefile:
         raise ValueError, 'Please specify input image'
     if not helio:
@@ -370,6 +374,7 @@ def imreg(imagefile=None, fitsfile=None, beamfile=None, helio=None, \
     nimg=len(imagefile)
     print str(nimg)+' images to process...'
     for n in range(nimg):
+        print 'processing image #'+str(n)
         img=imagefile[n]
         fits=fitsfile[n]
         hel=helio[n]
@@ -442,7 +447,7 @@ def imreg(imagefile=None, fitsfile=None, beamfile=None, helio=None, \
             # which axis is frequency?
             faxis=keys[values.index('FREQ')][-1]
             faxis_ind=dim-int(faxis)
-            if header['BUNIT'] == 'JY/BEAM':
+            if header['BUNIT'].lower() == 'jy/beam':
                 header['BUNIT']='K'
                 for i in range(sz[faxis_ind]):
                     nu=header['CRVAL'+faxis]+header['CDELT'+faxis]* \
@@ -487,3 +492,4 @@ def imreg(imagefile=None, fitsfile=None, beamfile=None, helio=None, \
             
         hdu.flush()
         hdu.close()
+
