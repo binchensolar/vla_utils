@@ -1,2 +1,2 @@
-# vla_utils_py
+# vla_utils
 Tools for processing VLA solar data
