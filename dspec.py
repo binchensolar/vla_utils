@@ -8,7 +8,7 @@ import signalsmooth
 from taskinit import *
 def get_dspec(mspath=None,msfile=None,specfile=None,bl='19&22',timeran=None,chanran=None,savetxt=None):
     # Note: antennas specified in "bl" is antennas INDEX but not antenna NAME.
-
+    ''' test notes '''
     # Open the ms and plot dynamic spectrum
     print 'retrieving spectral data...'
     ms.open(mspath+'/'+msfile)
