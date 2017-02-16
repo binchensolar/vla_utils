@@ -20,11 +20,12 @@
 ; Keywords    : nosep - If set, combine frequency, time, and polarization dimensions, i.e. return
 ;                 array dimensioned [nx,ny,nfreq*ntime*npol] instead of [nx,ny,nfreq,npol,ntime] 
 ;
-; History     : Written by Bin Chen (bin.chen@cfa.harvard.edu) based on hsi_fits2map.pro by P. T. Gallagher
+; History     : Written by Bin Chen (bin.chen@njit.edu) based on hsi_fits2map.pro by P. T. Gallagher
 ;
 ; Modifications:
+;           16-Feb-2016, Bin Chen - set roll_angle to zero for two-dimensional maps. Otherwise it takes -p_angle 
 ;
-; Contact     : bin.chen@cfa.harvard.edu
+; Contact     : bin.chen@njit.edu
 ;-
 
 pro vla_fits2map, files, map
@@ -60,6 +61,7 @@ case 1 of
         add_prop, map, freq = freq
         add_prop, map, frequnit = 'GHz' 
         add_prop, map, stokes = stokes
+        map.roll_angle=0.
     end
 
     n_dim eq 3: begin
